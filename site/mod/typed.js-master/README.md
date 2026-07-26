@@ -316,7 +316,7 @@ var typed = new Typed('.element', {
 
 ## Contributing
 
-### [View Contribution Guidelines](./.github/CONTRIBUTING.md)
+### [View Contribution Guidelines](.github/CONTRIBUTING.md)
 
 ## end
 
