@@ -1,0 +1,38 @@
+name: deploy
+
+on:
+  push:
+    branches: [ master ]
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_OIDC_ROLE_ARN: arn:aws:iam::779400169391:role/edizzy-website-deploy
+  AWS_REGION: eu-west-1
+  AWS_S3_BUCKET_ID: 779400169391-eu-west-1-edizzy-website
+  AWS_CLOUDFRONT_DISTRIBUTOR_ID: E2Q0UZ26UXBWRS
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: S3 Sync
+        run: aws s3 sync site "s3://${{ AWS_S3_BUCKET_ID }}" --delete
+
+      - name: CF Invalidate cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ AWS_CLOUDFRONT_DISTRIBUTOR_ID }} --paths "/*"
+
+
