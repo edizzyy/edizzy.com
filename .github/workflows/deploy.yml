@@ -30,9 +30,9 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: S3 Sync
-        run: aws s3 sync site "s3://${{ AWS_S3_BUCKET_ID }}" --delete
+        run: aws s3 sync site "s3://${{ env.AWS_S3_BUCKET_ID }}" --delete
 
       - name: CF Invalidate cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ AWS_CLOUDFRONT_DISTRIBUTOR_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ env.AWS_CLOUDFRONT_DISTRIBUTOR_ID }} --paths "/*"
 
 
